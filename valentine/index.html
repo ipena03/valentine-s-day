@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veux-tu être ma Valentine ?</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #ffe4e1;
+            overflow-x: hidden; /* Empêche le défilement horizontal */
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #d63384;
+            font-size: 1.8rem; /* Plus petit pour mobile */
+            margin: 20px 0;
+            min-height: 80px;
+            z-index: 20;
+        }
+
+        /* Responsive Title */
+        @media (min-width: 768px) {
+            h1 { font-size: 2.5rem; }
+        }
+
+        .gif-container {
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 1/1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .gif-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(214, 51, 132, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            min-height: 150px;
+            width: 100%;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            touch-action: manipulation; /* Optimise le clic sur mobile */
+        }
+
+        @media (min-width: 768px) {
+            button { padding: 15px 35px; font-size: 1.3rem; }
+        }
+
+        #btnOui {
+            background-color: #ff4d6d;
+            color: white;
+            z-index: 15;
+        }
+
+        #btnNon {
+            background-color: #6c757d;
+            color: white;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="gif-container">
+        <img id="mainGif" src="depart.gif" alt="Nick Wilde">
+    </div>
+
+    <h1 id="mainTitle">Veux-tu être ma Valentine ?</h1>
+
+    <div class="button-group">
+        <button id="btnOui" onclick="celebrer()">OUI</button>
+        <button id="btnNon" onclick="actionNon()">NON</button>
+    </div>
+
+    <script>
+        let ouiSize = 1;
+        let hasMoved = false;
+        let toggleText = false;
+
+        function actionNon() {
+            const btnNon = document.getElementById('btnNon');
+            const btnOui = document.getElementById('btnOui');
+            const gif = document.getElementById('mainGif');
+            const title = document.getElementById('mainTitle');
+
+            // 1. Changement du GIF
+            gif.src = "non.gif";
+
+            // 2. Changement du texte
+            if (toggleText) {
+                title.innerText = "T'es sûre ?";
+            } else {
+                title.innerText = "Arête je sais que tu veux";
+            }
+            toggleText = !toggleText;
+            title.style.color = "#ff4d6d";
+
+            // 3. Déplacement sécurisé
+            if (!hasMoved) {
+                btnNon.style.position = "fixed";
+                hasMoved = true;
+            }
+
+            // Calcul pour que le bouton ne sorte jamais de l'écran visible
+            const padding = 20;
+            const maxX = window.innerWidth - btnNon.offsetWidth - padding;
+            const maxY = window.innerHeight - btnNon.offsetHeight - padding;
+            
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+
+            btnNon.style.left = randomX + 'px';
+            btnNon.style.top = randomY + 'px';
+
+            // 4. Grossissement du bouton OUI
+            ouiSize += 0.3; // Un peu moins violent pour que ça loge sur mobile
+            btnOui.style.transform = `scale(${ouiSize})`;
+        }
+
+        function celebrer() {
+            document.body.innerHTML = `
+                <div class="gif-container">
+                    <img src="oui.gif" alt="Nick et Judy">
+                </div>
+                <h1 style="color: #d63384;"> ❤️<br>Tu me kiff enfaite !</h1>
+            `;
+            document.body.style.backgroundColor = "#ffccd5";
+        }
+    </script>
+</body>
+</html>
